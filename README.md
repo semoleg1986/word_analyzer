@@ -40,4 +40,13 @@ make lint   # проверка типизации через mypy
 word_analyzer/
 ├── Makefile
 ├── README.md
+├── init.py
+├── analyzer.py          # Логика анализа текста
+├── cli.py               # CLI интерфейс приложения
+├── main.py              # Точка входа
+├── test.txt             # Пример текстового файла
+├── tests/               # Тесты
+│   └── test_analyzer.py
+└── utils/
+    └── logger.py        # Логирование
 ```
