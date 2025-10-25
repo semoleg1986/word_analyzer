@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import mock_open, patch
 
 from cli import App
 
@@ -32,3 +32,16 @@ def test_run_with_input(mock_parse_args, mock_input, capsys):
 
     captured = capsys.readouterr()
     assert "test" in captured.out
+
+
+@patch("builtins.open", new_callable=mock_open, read_data="file content test")
+@patch("cli.parse_args")
+def test_run_with_file(mock_parse_args, mock_file, capsys):
+    from argparse import Namespace
+
+    mock_parse_args.return_value = Namespace(file="dummy.txt", top=2)
+    app = App()
+    app.run()
+
+    captured = capsys.readouterr()
+    assert "file" in captured.out

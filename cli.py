@@ -3,6 +3,9 @@ import argparse
 from tabulate import tabulate
 
 from analyzer import Analyser
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 def parse_args() -> argparse.Namespace:
@@ -30,6 +33,7 @@ class App:
                 with open(args.file, "r", encoding="utf-8") as f:
                     text = f.read()
             except FileNotFoundError:
+                logger.error(f"Файл `{args.file}` не найден")
                 print(f"Ошибка: файл '{args.file}' не найден.")
                 return
         else:
@@ -54,3 +58,4 @@ class App:
             )
         ]
         print(tabulate(table, headers=self.columns, tablefmt="grid"))
+        logger.info("Анализ успешно завершён")
