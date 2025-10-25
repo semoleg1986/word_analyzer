@@ -1,5 +1,9 @@
 import argparse
 
+from tabulate import tabulate
+
+from analyzer import Analyser
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Word Analyzer CLI")
@@ -17,4 +21,36 @@ class App:
         self.columns = ("Words", "Unique", "Top words")
 
     def run(self) -> None:
-        pass
+        """
+        Точка входа CLI. Обрабатывает аргументы.
+        """
+        args = parse_args()
+        if args.file:
+            try:
+                with open(args.file, "r", encoding="utf-8") as f:
+                    text = f.read()
+            except FileNotFoundError:
+                print(f"Ошибка: файл '{args.file}' не найден.")
+                return
+        else:
+            text = input("> ")
+        self.start(text, args.top)
+
+    def start(self, text: str, top_n: int) -> None:
+        """
+        Запускает процесс анализа текста.
+
+        :param text: Входной текст для анализа.
+        :type text: str
+        :param top_n: Количество слов в топе.
+        :type top_n: int
+        """
+        analyzer = Analyser(text)
+        table = [
+            (
+                analyzer.count_words(),
+                analyzer.count_uniq_words(),
+                ", ".join(analyzer.top_freq_words(top_n)),
+            )
+        ]
+        print(tabulate(table, headers=self.columns, tablefmt="grid"))
